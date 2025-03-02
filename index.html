@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="styles.css"><link/>
+</head>
+<body>
+    <div class="glow-effect" style="top: 20%; left: 10%;"></div>
+    <div class="glow-effect" style="bottom: 30%; right: 15%;"></div>
+    
+    <div class="container">
+        <header>
+            <h1>LISTA DE TAREFAS</h1>
+            <div class="app-controls">
+                <button class="control-button" id="searchToggle">🔍 Buscar</button>
+                <button class="control-button" id="sortTasks">🔄 Ordenar</button>
+                <button class="control-button" id="exportTasks">📤 Exportar</button>
+                <button class="control-button" id="themeToggle">🌓 Tema</button>
+            </div>
+        </header>
+        
+        <div class="search-container" id="searchContainer">
+            <input type="text" class="search-input" placeholder="Buscar tarefas...">
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="all">Todas</div>
+            <div class="tab" data-tab="active">Pendentes</div>
+            <div class="tab" data-tab="completed">Concluídas</div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" class="task-input" placeholder="Adicionar nova tarefa...">
+            <button class="add-button">ADICIONAR</button>
+            <div class="task-options" id="taskOptions">
+                <div class="options-row">
+                    <select class="priority-selector">
+                        <option value="none">Prioridade</option>
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                    </select>
+                    <select class="category-selector">
+                        <option value="none">Categoria</option>
+                        <option value="trabalho">Trabalho</option>
+                        <option value="pessoal">Pessoal</option>
+                        <option value="estudo">Estudo</option>
+                    </select>
+                </div>
+                <div class="options-row">
+                    <input type="date" class="date-input" placeholder="Data de vencimento">
+                </div>
+            </div>
+        </div>
+        
+        <div id="taskContainer">
+            <ul class="task-list" id="taskList">
+                <!-- As tarefas serão adicionadas aqui pelo JavaScript -->
+            </ul>
+            
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📝</div>
+                <h3 class="empty-text">Nenhuma tarefa encontrada</h3>
+                <p>Adicione uma nova tarefa para começar</p>
+                <button class="empty-button" id="emptyAddTask">Adicionar tarefa</button>
+            </div>
+        </div>
+        
+        <div class="task-stats">
+            <div class="stats-detail">
+                <span class="pending-tasks">Pendentes: 0</span>
+                <span class="completed-tasks">Concluídas: 0</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Tarefa</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="edit-form" id="editForm">
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-input" id="editTaskText">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prioridade</label>
+                        <select class="form-select" id="editPriority">
+                            <option value="none">Nenhuma</option>
+                            <option value="low">Baixa</option>
+                            <option value="medium">Média</option>
+                            <option value="high">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Categoria</label>
+                        <select class="form-select" id="editCategory">
+                            <option value="none">Nenhuma</option>
+                            <option value="trabalho">Trabalho</option>
+                            <option value="pessoal">Pessoal</option>
+                            <option value="estudo">Estudo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data de vencimento</label>
+                        <input type="date" class="form-input" id="editDueDate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button cancel-button" id="cancelEdit">Cancelar</button>
+                <button class="modal-button confirm-button" id="confirmEdit">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar Ação</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza que deseja realizar esta ação?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button cancel-button" id="cancelAction">Cancelar</button>
+                <button class="modal-button confirm-button" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Exportação -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Exportar Tarefas</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Formato</label>
+                    <select class="form-select" id="exportFormat">
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                        <option value="txt">Texto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tarefas a exportar</label>
+                    <select class="form-select" id="exportType">
+                        <option value="all">Todas as tarefas</option>
+                        <option value="active">Apenas pendentes</option>
+                        <option value="completed">Apenas concluídas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button cancel-button" id="cancelExport">Cancelar</button>
+                <button class="modal-button confirm-button" id="confirmExport">Exportar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de Notificação -->
+    <div class="notification" id="notification">
+        <button class="notification-close">&times;</button>
+        <div class="notification-content">
+            <div class="notification-icon">✅</div>
+            <div class="notification-text">
+                <div class="notification-title">Sucesso</div>
+                <div class="notification-message">Operação realizada com sucesso!</div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+        
