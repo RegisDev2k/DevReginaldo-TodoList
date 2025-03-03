@@ -163,7 +163,7 @@ h1 {
 .task-options {
     display: none;
     position: absolute;
-    top: 100%;
+    top: 110%;
     left: 0;
     right: 0;
     background: var(--card-color);
@@ -581,6 +581,7 @@ h1 {
     color: var(--primary-color);
     cursor: pointer;
     transition: all 0.3s;
+    margin-top: 10px;
 }
 
 .empty-button:hover {
@@ -591,11 +592,23 @@ h1 {
     position: relative;
 }
 
+/* Keep all the original CSS and just modify/add these responsive sections */
+
+/* Enhanced responsive styles */
 @media (max-width: 767px) {
+    
+    
+    .container {
+        padding: 15px;
+        width: 100%;
+        border-radius: 10px;
+    }
+    
     header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
+        margin-bottom: 20px;
     }
 
     h1 {
@@ -607,8 +620,37 @@ h1 {
         justify-content: space-between;
     }
     
+    .control-button {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .input-container {
+        flex-direction: column;
+    }
+    
+    .task-input {
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .add-button {
+        width: 100%;
+        border-radius: 0 0 8px 8px;
+    }
+    
     .options-row {
         flex-direction: column;
+        gap: 10px;
     }
 
     .task-meta {
@@ -624,6 +666,112 @@ h1 {
     .task-stats {
         flex-direction: column;
         gap: 10px;
+    }
+    
+    .task-item {
+        padding: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .task-content {
+        width: 100%;
+    }
+    
+    .task-actions {
+        justify-content: flex-end;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+/* Tablet responsive styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+    }
+    
+    .task-meta {
+        flex-wrap: wrap;
+    }
+    
+    .task-item {
+        padding: 12px;
+    }
+    
+    .modal-content {
+        max-width: 70%;
+    }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+    h1 {
+        font-size: 1.25rem;
+    }
+    
+    .task-button {
+        padding: 4px;
+    }
+    
+    .control-button {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .task-item {
+        padding: 10px;
+    }
+    
+    .task-meta span {
+        font-size: 0.75rem;
+    }
+}
+
+/* Fix for landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .container {
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    
+    .task-list {
+        max-height: 200px;
+    }
+    
+    header {
+        margin-bottom: 15px;
+    }
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .task-button, 
+    .control-button, 
+    .tab,
+    .add-button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .task-input, 
+    .search-input, 
+    .form-input, 
+    .form-select {
+        min-height: 44px;
+    }
+}
+
+/* High pixel density screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .container::before {
+        height: 4px;
+    }
+    
+    .task-item {
+        border-left-width: 4px;
     }
 }
 
